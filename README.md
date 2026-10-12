@@ -1,6 +1,6 @@
 NSE Fundamental Equity Screener
 
-A SQL-based fundamental screener for 20 NSE large-cap stocks across 7 sectors, built entirely on financial statement data — no price data involved — with ratio calculations, multi-year trend analysis, and composite quality scoring, visualized in a connected Power BI dashboard.
+A SQL-based fundamental screener for 20 NSE large-cap stocks across 8 sectors, built entirely on financial statement data — no price data involved — with ratio calculations, multi-year trend analysis, and composite quality scoring, visualized in a connected Power BI dashboard.
 
 Problem Statement
 
@@ -35,7 +35,7 @@ Repository Structure
 └── README.md
 Tech Stack
 
-MySQL · SQL (window functions, CTEs, star schema design) · Power BI · DAX
+MySQL · SQL (window functions, CTEs, star schema design) · Power BI 
 
 How to Run
 Run NSE_equity_screener.sql in MySQL Workbench (or any MySQL 8.0+ client) to create the schema, load the data, and generate the ratios table.
