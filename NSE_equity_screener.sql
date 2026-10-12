@@ -6,7 +6,7 @@ use nse_equity_screener;
 -- STEP 2: CREATE THREE TABLES
 
 create table if not exists companies ( 
-ticker varchar(20) Primary key, -- make sure to use the same varchar for ticker across tables.
+ticker varchar(50) Primary key,
 company_name varchar(100), 
 sector varchar(50), 
 industry varchar(50),
@@ -72,7 +72,7 @@ fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'
 ignore 1 rows
-(ticker, fiscal_year, revenue, tax, net_profit, interest, equity_share_capital, borrowings, total_assets, reserves);
+(ticker, fiscal_year, revenue, net_profit, tax, interest, equity_share_capital, borrowings, total_assets, reserves);
 
 -- STEP 5: VERIFY DATA LOADED
 
@@ -155,7 +155,7 @@ order by r.interest_coverage desc;
 
 -- STEP 9: WINDOW FUNCTIONS
 
--- Query 6: Rank companies by ROE within each sector
+-- Query 6: Rank companies by Debt to Equity within each sector
 
 select 
 r.ticker, 
@@ -250,7 +250,7 @@ from ratios r
 join companies c on r.ticker = c.ticker 
 where r.fiscal_year = 2025),
 
-ranked as ( -- don't forget select * !!!
+ranked as (
 select *,
 rank() over(partition by sector order by roe desc) as roe_rank,
 rank() over(partition by sector order by roa desc) as roa_rank,
@@ -291,7 +291,7 @@ WITH avg_ratios AS (
     JOIN companies c ON r.ticker = c.ticker
     GROUP BY r.ticker, c.sector, c.company_name
 ),
-consistency AS ( -- an alt to nested in placement sql 
+consistency AS ( 
     WITH yoy AS (
         SELECT
             ticker,
@@ -318,7 +318,7 @@ cagr AS (
     FROM financials
     GROUP BY ticker
 ),
-ranked AS ( -- windows no need group  by !!
+ranked AS ( 
     SELECT
         a.ticker,
         a.company_name,
@@ -370,7 +370,7 @@ from ratios r
 join companies c on r.ticker = c.ticker
 group by c.sector),
 
-sector_ranked as(-- we don't need partition by since we have alr grouped by ?)
+sector_ranked as(
 select *,
 rank() over(order by s.avg_roe desc) as roe_rank,
 rank() over(order by s.avg_debt_to_equity asc) as debt_rank,
@@ -378,7 +378,7 @@ rank() over(order by s.avg_interest_coverage desc) as coverage_rank,
 rank() over(order by s.avg_net_profit_margin desc) as margin_rank
 from sector_metrics s)
 
-select  -- these are not agg funs!!
+select  
 sector,
 avg_roe,
 avg_roa,
